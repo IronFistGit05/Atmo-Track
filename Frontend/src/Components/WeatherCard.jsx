@@ -7,19 +7,6 @@ export default function WeatherCard() {
     const [timeOfDay, setTimeOfDay] = useState("day");
     const [forecast, setForecast] = useState([]);
 
-    useEffect(() => {
-        const hour = new Date().getHours();
-        if (hour >= 5 && hour < 12) {
-            setTimeOfDay("morning");
-        } else if (hour >= 12 && hour < 17) {
-            setTimeOfDay("afternoon");
-        } else if (hour >= 17 && hour < 20) {
-            setTimeOfDay("evening");
-        } else {
-            setTimeOfDay("night");
-        }
-    }, []);
-
     const getWeather = async () => {
         try {
             const res = await axios.get(
@@ -55,7 +42,7 @@ export default function WeatherCard() {
     };
 
     return (
-        <div className={`weather-app ${timeOfDay}`}>
+        <div className={`weather-app`}>
             <div className="weather-container">
 
                 {/* Search Section */}

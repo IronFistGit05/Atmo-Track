@@ -31,27 +31,7 @@ body {
   overflow-x: hidden;
 }
 
-.weather-app.morning {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  transition: background 1s ease;
-}
-
-.weather-app.afternoon {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  transition: background 1s ease;
-}
-
-.weather-app.evening {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  transition: background 1s ease;
-}
-
-.weather-app.night {
-  background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #2980b9 100%);
-  transition: background 1s ease;
-}
-
-.weather-app.day {
+.weather-app {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   transition: background 1s ease;
 }
