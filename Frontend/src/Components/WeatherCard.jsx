@@ -42,6 +42,9 @@ export default function WeatherCard() {
         } catch (error) {
             console.log(error);
             alert("City not found! Please try again.");
+            setCity("");
+            setWeather(null);
+            setForecast([]);
         }
     };
 
