@@ -218,6 +218,9 @@ export default function WeatherCard() {
                     </div>
                 )}
             </div>
+            <footer className="footer">
+  <p>© {new Date().getFullYear()} Atmo Track. All rights reserved.</p>
+</footer>
         </div>
     );
 }

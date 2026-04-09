@@ -5,9 +5,32 @@ import 'dotenv/config';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const API_KEY = process.env.API_KEY || 'baa023f650136877c18a59e2bc7983a0';
+const API_KEY = process.env.API_KEY;
 
-app.use(cors());
+// CORS configuration for production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:5174',
+    // Add your deployed frontend URLs here
+    // 'https://your-app-name.vercel.app',
+    // 'https://your-app-name.netlify.app',
+];
+ 
+app.use(cors({
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 
 app.get("/api/weather", async (req, res) => {
