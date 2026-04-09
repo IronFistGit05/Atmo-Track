@@ -7,6 +7,25 @@ export default function WeatherCard() {
     const [forecast, setForecast] = useState([]);
     const [chartData, setChartData] = useState([]);
 
+    //For graph coordinates
+    const temps = chartData.length ? chartData.map(p => p.temp) : [0];
+    const max = Math.max(...temps);
+    const min = Math.min(...temps);
+
+    //Avoid divide by zero
+    const range = max - min || 1;
+
+    const getX = (i) => {
+        const width = 260;
+        return 20 + (i * (width / (chartData.length - 1 || 1)));
+    };
+
+    const getY = (temp) => {
+        const height = 80;
+        return 100 - ((temp - min) / range) * height;
+    };
+
+    // Forecats Data Handling
     const getChartData = (forecastData) => {
         return forecastData.list.slice(0, 7).map(item => ({
             temp: Math.round(item.main.temp),
@@ -208,29 +227,22 @@ export default function WeatherCard() {
                                     <svg viewBox="0 0 300 150" className="weather-chart">
                                         <polyline
                                             points={chartData.map((point, i) => {
-                                                const x = 20 + i * 40;
-                                                const y = 120 - point.temp; // scale temp visually
-                                                return `${x},${y}`;
+                                                return `${getX(i)},${getY(point.temp)}`;
                                             }).join(" ")}
                                             fill="none"
-                                            stroke="rgba(255,255,255,0.6)"
+                                            stroke="rgba(255,255,255,0.7)"
                                             strokeWidth="2"
                                         />
 
-                                        {chartData.map((point, i) => {
-                                            const x = 20 + i * 40;
-                                            const y = 120 - point.temp;
-
-                                            return (
-                                                <circle
-                                                    key={i}
-                                                    cx={x}
-                                                    cy={y}
-                                                    r="4"
-                                                    fill="white"
-                                                />
-                                            );
-                                        })}
+                                        {chartData.map((point, i) => (
+                                            <circle
+                                                key={i}
+                                                cx={getX(i)}
+                                                cy={getY(point.temp)}
+                                                r="4"
+                                                fill="white"
+                                            />
+                                        ))}
                                     </svg>
                                     <div className="chart-labels">
                                         {chartData.map((point, i) => (

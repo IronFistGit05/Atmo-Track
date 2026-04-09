@@ -121,7 +121,7 @@ body {
 
 .search-btn {
   position: absolute;
-  right: 5px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.3);
@@ -368,11 +368,12 @@ body {
 }
 
 .chart-labels {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   margin-top: 8px;
   font-size: 11px;
   opacity: 0.7;
+  text-align: center;
 }
 
 .temp-range {
@@ -580,6 +581,18 @@ body {
     font-size: 15px;
   }
 
+  .bottom-nav {
+    padding: 10px 0;
+  }
+
+  .nav-item {
+    padding: 8px 12px;
+  }
+
+  .nav-icon {
+    font-size: 20px;
+  }
+
   .search-box {
     max-width: 100%;
   }
@@ -720,7 +733,8 @@ body {
 /* Print Styles */
 @media print {
   .header,
-  .search-section{
+  .search-section,
+  .bottom-nav {
     display: none;
   }
 
