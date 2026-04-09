@@ -2,7 +2,7 @@
  
 A beautiful, responsive weather application built with React and Node.js, featuring time-based dynamic backgrounds and glassmorphism design.
 ## 🌐 Live Demo
-[Movie Pulse](https://atmo-track.vercel.app/)
+[Atmo Track](https://atmo-track.vercel.app/)
  
 ![Atmo Track Preview](preview.png)
  
