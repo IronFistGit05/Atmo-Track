@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 export default function WeatherCard() {
     const [city, setCity] = useState("");
     const [weather, setWeather] = useState(null);
-    const [timeOfDay, setTimeOfDay] = useState("day");
     const [forecast, setForecast] = useState([]);
 
     const getWeather = async () => {
