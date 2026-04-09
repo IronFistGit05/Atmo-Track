@@ -1,6 +1,8 @@
 # 🌤️ Atmo Track - Modern Weather App
  
 A beautiful, responsive weather application built with React and Node.js, featuring time-based dynamic backgrounds and glassmorphism design.
+## 🌐 Live Demo
+[Movie Pulse](https://atmo-track.vercel.app/)
  
 ![Atmo Track Preview](preview.png)
  
@@ -35,10 +37,6 @@ A beautiful, responsive weather application built with React and Node.js, featur
    ```
  
 3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   
    Edit `.env` and add your OpenWeatherMap API key:
    ```env
    API_KEY=your_api_key_here
