@@ -13,13 +13,24 @@ app.use(express.json());
 app.get("/api/weather", async (req, res) => {
     try {
         const city = req.query.city;
-        const BASE_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
-        const response = await fetch(BASE_URL);
-        const data  = await response.json();
-        //console.log(data);
-        res.json(data);
-        //console.log(city);
+        // Current weather
+        const currentRes = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+        );
+        const currentData = await currentRes.json();
+
+        // Forecast (5 days / 3-hour data)
+        const forecastRes = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`
+        );
+        const forecastData = await forecastRes.json();
+
+        res.json({
+            current: currentData,
+            forecast: forecastData
+        });
+
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch weather data" });
     }

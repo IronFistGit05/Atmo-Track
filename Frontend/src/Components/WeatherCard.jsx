@@ -5,6 +5,41 @@ export default function WeatherCard() {
     const [city, setCity] = useState("");
     const [weather, setWeather] = useState(null);
     const [forecast, setForecast] = useState([]);
+    const [chartData, setChartData] = useState([]);
+
+    const getChartData = (forecastData) => {
+        return forecastData.list.slice(0, 7).map(item => ({
+            temp: Math.round(item.main.temp),
+            time: new Date(item.dt_txt).getHours()
+        }));
+    };
+
+    const processForecast = (data) => {
+        const daily = {};
+
+        data.list.forEach(item => {
+            const date = item.dt_txt.split(" ")[0];
+
+            // pick first entry of each day
+            if (!daily[date]) {
+                daily[date] = item;
+            }
+        });
+
+        return Object.keys(daily)
+            .slice(0, 5)
+            .map(date => {
+                const item = daily[date];
+
+                return {
+                    day: new Date(date).toLocaleDateString("en-US", {
+                        weekday: "short"
+                    }),
+                    temp: Math.round(item.main.temp),
+                    icon: item.weather[0].icon
+                };
+            });
+    };
 
     const getWeather = async () => {
         try {
@@ -12,19 +47,15 @@ export default function WeatherCard() {
                 "http://localhost:5000/api/weather",
                 { params: { city } }
             );
-            setWeather(res.data);
-            
-            // Forecast
-            const forecast = [
-                { day: "Mon", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "01d" },
-                { day: "Tue", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "02d" },
-                { day: "Wed", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "03d" },
-                { day: "Thu", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "04d" },
-                { day: "Fri", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "09d" },
-                { day: "Sat", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "10d" },
-                { day: "Sun", temp: Math.round(res.data.main.temp + Math.random() * 5 - 2), icon: "01d" },
-            ];
-            setForecast(forecast);
+            // current weather
+            setWeather(res.data.current);
+
+            // real forecast
+            const realForecast = processForecast(res.data.forecast);
+            setForecast(realForecast);
+
+            const chart = getChartData(res.data.forecast);
+            setChartData(chart);
         } catch (error) {
             console.log(error);
             alert("City not found! Please try again.");
@@ -47,9 +78,9 @@ export default function WeatherCard() {
                 {/* Search Section */}
                 <div className="search-section">
                     <div className="search-box">
-                        <input 
-                            type="text" 
-                            placeholder="Search city" 
+                        <input
+                            type="text"
+                            placeholder="Search city"
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                             onKeyPress={handleKeyPress}
@@ -71,7 +102,7 @@ export default function WeatherCard() {
                                 </div>
                             </div>
                             <div className="weather-icon-large">
-                                <img 
+                                <img
                                     src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
                                     alt={weather.weather[0].description}
                                 />
@@ -118,7 +149,7 @@ export default function WeatherCard() {
                                     {forecast.map((day, index) => (
                                         <div key={index} className="day-item">
                                             <p>{day.day}</p>
-                                            <img 
+                                            <img
                                                 src={`http://openweathermap.org/img/wn/${day.icon}.png`}
                                                 alt="weather"
                                             />
@@ -157,9 +188,9 @@ export default function WeatherCard() {
                                         <div className="stat-icon">🌅</div>
                                         <div className="stat-info">
                                             <p className="stat-value">
-                                                {new Date(weather.sys.sunrise * 1000).toLocaleTimeString('en-US', { 
-                                                    hour: '2-digit', 
-                                                    minute: '2-digit' 
+                                                {new Date(weather.sys.sunrise * 1000).toLocaleTimeString('en-US', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
                                                 })}
                                             </p>
                                             <p className="stat-label">Sunrise</p>
@@ -176,29 +207,35 @@ export default function WeatherCard() {
                                 <div className="chart-placeholder">
                                     <svg viewBox="0 0 300 150" className="weather-chart">
                                         <polyline
-                                            points="20,100 60,70 100,80 140,50 180,60 220,40 260,65"
+                                            points={chartData.map((point, i) => {
+                                                const x = 20 + i * 40;
+                                                const y = 120 - point.temp; // scale temp visually
+                                                return `${x},${y}`;
+                                            }).join(" ")}
                                             fill="none"
                                             stroke="rgba(255,255,255,0.6)"
                                             strokeWidth="2"
                                         />
-                                        {[20, 60, 100, 140, 180, 220, 260].map((x, i) => (
-                                            <circle
-                                                key={i}
-                                                cx={x}
-                                                cy={[100, 70, 80, 50, 60, 40, 65][i]}
-                                                r="4"
-                                                fill="white"
-                                            />
-                                        ))}
+
+                                        {chartData.map((point, i) => {
+                                            const x = 20 + i * 40;
+                                            const y = 120 - point.temp;
+
+                                            return (
+                                                <circle
+                                                    key={i}
+                                                    cx={x}
+                                                    cy={y}
+                                                    r="4"
+                                                    fill="white"
+                                                />
+                                            );
+                                        })}
                                     </svg>
                                     <div className="chart-labels">
-                                        <span>8th</span>
-                                        <span>9th</span>
-                                        <span>10th</span>
-                                        <span>11th</span>
-                                        <span>12th</span>
-                                        <span>13th</span>
-                                        <span>14th</span>
+                                        {chartData.map((point, i) => (
+                                            <span key={i}>{point.time}:00</span>
+                                        ))}
                                     </div>
                                     <div className="temp-range">
                                         <span>32°</span>
@@ -218,8 +255,8 @@ export default function WeatherCard() {
                 )}
             </div>
             <footer className="footer">
-  <p>© {new Date().getFullYear()} Atmo Track. All rights reserved.</p>
-</footer>
+                <p>© {new Date().getFullYear()} Atmo Track. All rights reserved.</p>
+            </footer>
         </div>
     );
 }
