@@ -63,7 +63,7 @@ export default function WeatherCard() {
     const getWeather = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/api/weather",
+                "https://atmo-track.onrender.com/api/weather",
                 { params: { city } }
             );
             // current weather
